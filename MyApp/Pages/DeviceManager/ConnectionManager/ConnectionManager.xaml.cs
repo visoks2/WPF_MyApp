@@ -2,21 +2,22 @@
 using System.ComponentModel;
 using System.Windows;
 
-namespace MyApp.Pages.DeviceManager
+namespace MyApp.Pages.DeviceManager.ConnectionManager
 {
     /// <summary>
     /// Interaction logic for DeviceManager.xaml
     /// </summary>
-    public partial class DeviceManager : UCBase
+    public partial class ConnectionManager : UCBase
     {
-        public DeviceManager()
+        public ConnectionManager()
         {
             InitializeComponent();
         }
+
         public override void OnActivated()
         {
             base.OnActivated();
-            connectionManager.ViewModel.RefreshAvailableDevicesCommand.Execute(null);
+            ViewModel.RefreshAvailableDevices();
         }
 
         public override void OnDeactivated()

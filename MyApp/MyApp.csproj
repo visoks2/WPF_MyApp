@@ -54,6 +54,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -73,15 +75,28 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Domain\BaseViewModel.cs" />
     <Compile Include="Domain\SampleMessageDialog.xaml.cs">
       <DependentUpon>SampleMessageDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Domain\UCBase.cs" />
+    <Compile Include="Pages\DeviceManager\ConnectionManager\DeviceConnectionState.cs" />
+    <Compile Include="Pages\DeviceManager\ConnectionManager\ConnectionManager.xaml.cs">
+      <DependentUpon>ConnectionManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DeviceManager\ConnectionManager\ConnectionManagerViewModel.cs" />
     <Compile Include="Pages\DeviceManager\DeviceConnectionState.cs" />
     <Compile Include="Pages\DeviceManager\DeviceManager.xaml.cs">
       <DependentUpon>DeviceManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\DeviceManager\DeviceManagerViewModel.cs" />
+    <Compile Include="Pages\DeviceManager\Devices.cs" />
+    <Compile Include="Pages\DeviceManager\TestCmdViewModel.cs" />
+    <Compile Include="Pages\Ingredients\IngredientEntity.cs" />
+    <Compile Include="Pages\Ingredients\Ingredients.xaml.cs">
+      <DependentUpon>Ingredients.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Ingredients\IngredientsViewModel.cs" />
     <Compile Include="XamlDisplayEx.cs" />
     <Page Include="Domain\SampleMessageDialog.xaml">
       <SubType>Designer</SubType>
@@ -103,9 +118,17 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\DeviceManager\ConnectionManager\ConnectionManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\DeviceManager\DeviceManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Ingredients\Ingredients.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Home\Home.xaml">
       <SubType>Designer</SubType>

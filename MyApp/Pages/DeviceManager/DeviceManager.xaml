@@ -8,13 +8,16 @@
              xmlns:local="clr-namespace:MyApp.Pages.DeviceManager"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
-             x:Class="MyApp.Pages.DeviceManager.DeviceManager"
              xmlns:my="clr-namespace:MyApp.Pages.DeviceManager"
+             xmlns:showmethexaml="clr-namespace:ShowMeTheXAML;assembly=ShowMeTheXAML"
+             xmlns:ConnectionManager="clr-namespace:MyApp.Pages.DeviceManager.ConnectionManager"
+             x:Class="MyApp.Pages.DeviceManager.DeviceManager"
              mc:Ignorable="d" 
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800" >
+
     <domain:UCBase.Resources>
-        <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"></conv:InverseBooleanConverter>
+        <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <!--How to sort Ccombobox items-->
         <!--<CollectionViewSource Source="{Binding Path=BaudRates}" x:Key="cvs">
             <CollectionViewSource.SortDescriptions>
@@ -101,60 +104,103 @@
             </Style.BasedOn>
         </Style>
     </domain:UCBase.Resources>
+
+
     <domain:UCBase.DataContext>
-        <local:DeviceManagerViewModel x:Name="DeviceManagerViewModel"/>
+        <my:DeviceManagerViewModel x:Name="DeviceManagerViewModel"/>
     </domain:UCBase.DataContext>
+
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="132"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel DockPanel.Dock="Right" 
-                    Margin="16 16 0 0"
-                    Width="100" Grid.Column="1">
-            <!--Available devices-->
-            <ComboBox Margin="0 16 0 0"
-                      IsEnabled="{Binding IsConnected, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding AvailableDevice }"
-                      SelectedItem="{Binding SelectedDevice}"/>
-            <!--Baudrate-->
-            <ComboBox Margin="0 16 0 0"
-                      IsEnabled="{Binding IsConnected, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding BaudRates}"
-                      SelectedItem="{Binding SelectedBaudRate}"/>
 
-            <Button   Margin="0 16 0 0"
-                Command = "{Binding ConnectComand}" >
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle1}">
-                        <!--<Setter Property="Button.Content" Value="...." />-->
-                        <!--<Setter Property="IsEnabled" Value="False" />-->
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static my:DeviceConnectionState.NotConfigured}">
-                                <Setter Property="Content" Value="Connect" />
-                                <Setter Property="IsEnabled" Value="False" />
-                            </DataTrigger>
-                            <DataTrigger  Binding="{Binding ConnectionState}" Value="{x:Static my:DeviceConnectionState.Connected}">
-                                <Setter Property="Content" Value="Disconnect" />
-                                <Setter Property="IsEnabled" Value="True" />
-                            </DataTrigger>
-                            <DataTrigger  Binding="{Binding ConnectionState}" Value="{x:Static my:DeviceConnectionState.CanConnect}">
-                                <Setter Property="Content" Value="Connect" />
-                                <Setter Property="IsEnabled" Value="True" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
+        <StackPanel DockPanel.Dock="Right" 
+            Margin="16 16 0 0"
+            Width="100" 
+            Grid.Column="1">
+            <ConnectionManager:ConnectionManager x:Name="connectionManager"/>
+            <Button  
+                Margin="0 16 0 0"
+                Content="Start"
+                IsEnabled="{Binding Source={x:Reference connectionManager}, Path=DataContext.IsConnected}"
+                Command = "{Binding StartComand}" >
             </Button>
         </StackPanel>
-        <Button Content="Send Command" 
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Top"
-                Command="{Binding SendCmdCommand}"
-                IsEnabled="{Binding IsConnected}"/>
+
+        <ScrollViewer >
+            <DataGrid ItemsSource="{Binding Items3}" 
+                CanUserSortColumns="True" 
+                CanUserAddRows="True" 
+                AutoGenerateColumns="False"
+                materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                materialDesign:DataGridAssist.ColumnHeaderPadding="8" >
+                <DataGrid.Columns>
+                    <!-- Column IsSlected -->
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected}" 
+                        ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                        EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                        <DataGridCheckBoxColumn.Header>
+                            <!--padding to allow hit test to pass thru for sorting -->
+                            <Border Background="Transparent" 
+                                    Padding="6 0 6 0" 
+                                    HorizontalAlignment="Center">
+                                <CheckBox HorizontalAlignment="Center"
+                                    DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                    IsChecked="{Binding IsAllItems3Selected}" />
+                            </Border>
+                        </DataGridCheckBoxColumn.Header>
+                    </DataGridCheckBoxColumn>
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Code}"
+                                Header="Code"
+                                                                    
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                    <!-- Column Command -->
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Command}"
+                                                        Header="Command"
+                                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
+                    <!-- Column Description -->
+                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
+                                                        Header="Description"
+                                                        MaxLength="255" 
+                                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" />
+
+                    <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
+                    <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"
+                                                            SelectedValueBinding="{Binding Food}"
+                                                            ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
+                    <!-- Column Frequency -->
+                    <materialDesign:MaterialDataGridTextColumn x:Name="GridColumn_Frequency"
+                                                Binding="{Binding Frequency}"
+                                                Header="Frequency"
+                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                        <materialDesign:MaterialDataGridTextColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock TextWrapping="Wrap" Text="{Binding}" TextAlignment="Right"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </materialDesign:MaterialDataGridTextColumn.HeaderStyle>
+                        <materialDesign:MaterialDataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                            </Style>
+                        </materialDesign:MaterialDataGridTextColumn.ElementStyle>
+                    </materialDesign:MaterialDataGridTextColumn>
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
     </Grid>
 </domain:UCBase>

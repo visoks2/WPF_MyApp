@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MyApp.Pages.DeviceManager;
 using MyApp.Pages.Home;
+using MyApp.Pages.Ingredients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,12 @@ namespace MyApp.Domain
 
             MenuItems = new[]
             {
+                //new MenuItem("Device Manager", new DeviceManager()),
+
+
+
                 new MenuItem("Home", new Home()),
-                new MenuItem("Device Manager", new DeviceManager())
+                new MenuItem("Ingredients", new Ingredients())
             };
         }
 

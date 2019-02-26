@@ -1,152 +1,149 @@
 ﻿using MyApp.Domain;
+using MyApp.Pages.DeviceManager.ConnectionManager;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 
 namespace MyApp.Pages.DeviceManager
 {
-    public class DeviceManagerViewModel : INotifyPropertyChanged
+    public class DeviceManagerViewModel : BaseViewModel
     {
-        public ICommand ConnectComand { get; }
-        public ICommand SendCmdCommand { get; }
-        
-        private string[] _availableDevice;
-        private string _selectedDevice;
-        private readonly int[] _availableBaudRates = new int[] { 9600, 19200, 38400, 57600, 115200 };
-        private int _selectedBaudRate = 115200;
-        private SerialPort _serialPort = null;
-        private DeviceConnectionState _connectionState = DeviceConnectionState.NotConfigured;
-        private bool _isConnected = false;
+        public ICommand StartComand { get; }
 
+        #region Private variables
+        private Timer _timer ;
+        #endregion
+        #region Constructor
         public DeviceManagerViewModel()
         {
-            ConnectComand = new AnotherCommandImplementation(_ => OnConnectButtonPressed());
-            SendCmdCommand = new AnotherCommandImplementation(_ => SendCommand());
+            StartComand = new AnotherCommandImplementation(_ => Start());
+
+            _items3 = CreateData();
+            _timer = new Timer(1);
+            _timer.Elapsed += _timer_Elapsed;
+            SerialPort.DataReceived += SerialPort_DataReceived;
+        }
+        #endregion
+        #region Properties
+        private SerialPort SerialPort {
+            get { return Devices.SerialPort; }
+        }
+        #endregion
+        #region Public methods
+        #endregion
+        #region Private methods
+        private void Start()
+        {
+            _timer.Start();
+            i = 0;
+        }
+        #endregion
+        #region Callbacks
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            changed = 5;
+            if (i-1< Items3.Count)
+                 Items3[i-1].Description += SerialPort.ReadExisting();
+            //throw new NotImplementedException();
         }
 
-        public DeviceConnectionState ConnectionState {
-            get { return _connectionState; }
-            private set {
-                _connectionState = value;
-                OnConnetionStateChanged();
-                OnPropertyChanged("ConnectionState");
+        int i = 0;
+        int state = 0;
+        int changed = 5;
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            switch (state)
+            {
+                case 0:
+                    for (; i < Items3.Count; i++)
+                    {
+                        if (Items3[i].IsSelected)
+                        {
+                            Items3[i].Description = string.Empty;
+                            SerialPort.WriteLine(Items3[i].Command);
+                            state = 1;
+                            break;
+                        }
+                    }
+                    i++;
+                    if (i >= Items3.Count)
+                        _timer.Stop();
+                    break;
+                case 1:
+                    changed--;
+                    if (changed == 0)
+                    {
+                        state = 0;
+                    }
+                    break;
             }
+
         }
-        public bool IsConnected {
-            get { return _isConnected; }
-            private set {
-                _isConnected = value;
-                OnPropertyChanged("IsConnected");
-            }
+        #endregion
+
+
+
+        private  ObservableCollection<TestCmdViewModel> _items3;
+        public ObservableCollection<TestCmdViewModel> Items3 => _items3;
+        private static ObservableCollection<TestCmdViewModel> CreateData()
+        {
+            return new ObservableCollection<TestCmdViewModel>
+            {
+                new TestCmdViewModel
+                {
+                    Command = "\x01\x02Help\x03\x04",
+                    Description = "Hello world",
+                    Frequency = 0,
+                    RepeatTimes = 1
+                },
+                new TestCmdViewModel
+                {
+                    Command = "\x01\x02Hello\x03\x04",
+                    Description = "Hello world",
+                    Frequency = 0,
+                    RepeatTimes = 1
+                },
+            };
         }
-        public string[] AvailableDevice {
-            get { return _availableDevice; }
+
+        //public IEnumerable<string> Foods {
+        //    get {
+        //        yield return "Burger";
+        //        yield return "Fries";
+        //        yield return "Shake";
+        //        yield return "Lettuce";
+        //    }
+        //}
+        private bool? _isAllItems3Selected;
+
+        public bool? IsAllItems3Selected {
+            get { return _isAllItems3Selected; }
             set {
-                _availableDevice = value;
-                OnPropertyChanged("AvailableDevice");
-            }
-        }
-        public string SelectedDevice {
-            get { return _selectedDevice; }
-            set {
-                _selectedDevice = value;
-                OnPropertyChanged("SelectedDevice");
-                if (string.IsNullOrWhiteSpace(_selectedDevice))
-                    ConnectionState = DeviceConnectionState.NotConfigured;
-                else
-                    ConnectionState = DeviceConnectionState.CanConnect;
+                if (_isAllItems3Selected == value) return;
+
+                _isAllItems3Selected = value;
+
+                if (_isAllItems3Selected.HasValue)
+                    SelectAll(_isAllItems3Selected.Value, Items3);
+
+                OnPropertyChanged();
             }
         }
 
-        public int[] BaudRates {
-            get { return _availableBaudRates; }
-        }
-        public int SelectedBaudRate {
-            get { return _selectedBaudRate; }
-            set { _selectedBaudRate = value; }
-        }
-
-        public void RefreshAvailableDevices()
+        private static void SelectAll(bool select, IEnumerable<TestCmdViewModel> models)
         {
-            string[] names = SerialPort.GetPortNames();
-            for (int i = 0; i < names.Length; i++)
+            foreach (var model in models)
             {
-                names[i] = names[i].Substring(0, 4);
-            }
-            AvailableDevice = names;
-            if (AvailableDevice.Length > 0)
-                SelectedDevice = AvailableDevice[0];
-        }
-        private void OnConnectButtonPressed()
-        {
-            switch (ConnectionState)
-            {
-                case DeviceConnectionState.NotConfigured:
-                    //validate
-
-                    break;
-                case DeviceConnectionState.Validating:
-                    break;
-                case DeviceConnectionState.CanConnect:
-                    _serialPort = new SerialPort(SelectedDevice);
-                    _serialPort.BaudRate = SelectedBaudRate;
-                    _serialPort.Open();
-                    if (_serialPort.IsOpen)
-                        ConnectionState = DeviceConnectionState.Connected;
-                    break;
-                case DeviceConnectionState.Connected:
-                    _serialPort.Close();
-                    if (!_serialPort.IsOpen)
-                        ConnectionState = DeviceConnectionState.CanConnect;
-                    break;
-                case DeviceConnectionState.Connecting:
-                    break;
-                case DeviceConnectionState.Disconnected:
-                    break;
-                default:
-                    break;
+                model.IsSelected = select;
             }
         }
-        private void OnConnetionStateChanged()
-        {
-            switch (ConnectionState)
-            {
-                case DeviceConnectionState.NotConfigured:
-                    break;
-                case DeviceConnectionState.Validating:
-                    break;
-                case DeviceConnectionState.CanConnect:
-                    IsConnected = false;
-                    break;
-                case DeviceConnectionState.Connected:
-                    IsConnected = true;
-                    break;
-                case DeviceConnectionState.Connecting:
-                    break;
-                case DeviceConnectionState.Disconnected:
-                    IsConnected = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void SendCommand()
-        {
-            _serialPort.WriteLine("Begin hi");
-        }
-
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
     }
+
 }
