@@ -5,21 +5,83 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:local="clr-namespace:MyApp.Pages.Ingredients"
+             xmlns:smtx="clr-namespace:ShowMeTheXAML;assembly=ShowMeTheXAML"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <domain:UCBase.DataContext>
         <local:IngredientsViewModel x:Name="IngredientsViewModel"/>
     </domain:UCBase.DataContext>
 
-   
 
-    <Grid>
-        
-        <DataGrid ItemsSource="{Binding Ingredients}"
-                    AutoGenerateColumns="True" 
-                  AutoGeneratingColumn="dg_AutoGeneratingColumn" BeginningEdit="DataGrid_BeginningEdit">
+    <Grid >
+        <DockPanel >
+            <smtx:XamlDisplay Key="menus_2" DockPanel.Dock="Top" Margin="0 0 0 0">
+                <ToolBarTray>
+                    <ToolBar Style="{DynamicResource MaterialDesignToolBar}" ClipToBounds="False">
+                        <Button ToolTip="Refresh" Command="{Binding RefreshComand}">
+                            <materialDesign:PackIcon Kind="Refresh" />
+                        </Button>
+                        <Button ToolTip="Save" Command="{Binding SaveComand}">
+                            <materialDesign:PackIcon Kind="ContentSave" />
+                        </Button>
+                        <Separator />
+                        <Button ToolTip="Add row" Command="{Binding AddNewItemCommand}">
+                            <materialDesign:PackIcon Kind="Add" />
+                        </Button>
+                        <Button ToolTip="Delete row" Command="{Binding DeleteComand}">
+                            <materialDesign:PackIcon Kind="Delete" />
+                        </Button>
+                        <Separator />
+                        <Button Command="Cut" ToolTip="Cut" ToolBar.OverflowMode="AsNeeded">
+                            <materialDesign:PackIcon Kind="ContentCut" />
+                        </Button>
+                        <Button Command="Copy" ToolTip="Copy that stuff" ToolBar.OverflowMode="AsNeeded">
+                            <materialDesign:PackIcon Kind="ContentCopy" />
+                        </Button>
+                        <Button Command="Paste" ToolTip="Paste some stuff" ToolBar.OverflowMode="AsNeeded">
+                            <materialDesign:PackIcon Kind="ContentPaste" />
+                        </Button>
+                        <Separator />
 
-        </DataGrid>
+                        <Button ToolTip="Take a nap" ToolBar.OverflowMode="Always">
+                            <materialDesign:PackIcon Kind="Hotel" />
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+            </smtx:XamlDisplay>
+
+            <ScrollViewer x:Name="scrollViewer">
+                <DataGrid ItemsSource="{Binding Ingredients}" 
+                    SelectedItem="{Binding SelectedItem}"
+                    VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Stretch"
+                    ScrollViewer.CanContentScroll="True"
+                    CanUserSortColumns="True" 
+                    CanUserAddRows="False" 
+                    AutoGenerateColumns="False"
+                    materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                    materialDesign:DataGridAssist.ColumnHeaderPadding="8" 
+                    PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                    <DataGrid.Columns>
+                        <!--<materialDesign:MaterialDataGridTextColumn Binding="{Binding ID}"
+                            Visibility="Hidden"
+                            Header="ID"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />-->
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding Name}"
+                            Header="Pavadinimas"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
+                            Header="Aprašas"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        <materialDesign:MaterialDataGridTextColumn Binding="{Binding Category}"
+                            Header="Kategorija?"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ScrollViewer>
+        </DockPanel>
     </Grid>
+
 </domain:UCBase>

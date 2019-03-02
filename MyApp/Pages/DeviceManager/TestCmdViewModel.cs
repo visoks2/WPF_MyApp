@@ -13,7 +13,6 @@ namespace MyApp.Pages.DeviceManager
     public class TestCmdViewModel : BaseViewModel
     {
         private bool _isSelected;
-        private string _name;
         private string _description;
         private string _command;
         private double _frequency;

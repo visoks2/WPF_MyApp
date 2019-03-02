@@ -13,5 +13,6 @@ namespace MyApp
     /// </summary>
     public partial class App : Application
     {
+        public static bool IsDesignMode => System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime;
     }
 }

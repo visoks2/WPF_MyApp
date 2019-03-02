@@ -1,23 +1,71 @@
-﻿using System;
+﻿using CsvHelper;
+using MyApp.DataProvider;
+using MyApp.Domain;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MyApp.Pages.Ingredients
 {
-    public class IngredientsViewModel
+    public class IngredientsViewModel : BaseViewModel
     {
-        private List<IngredientEntity> _ingredients = new List<IngredientEntity>();
+        public ICommand SaveComand { get; }
+        public ICommand RefreshComand { get; }
+        public ICommand DeleteComand { get; }
+        public ICommand AddNewItemCommand { get; }
+
+        private ObservableCollection<IngredientEntity> _ingredients = new ObservableCollection<IngredientEntity>();
+        private IngredientEntity _selectedItem;
+
         public IngredientsViewModel()
         {
-            _ingredients.Add(new IngredientEntity() {ID = 0, Name = "asd", Description = "test"});
+            SaveComand = new AnotherCommandImplementation(_ => Save());
+            RefreshComand = new AnotherCommandImplementation(_ => Refresh());
+            DeleteComand = new AnotherCommandImplementation(_ => Delete());
+            AddNewItemCommand = new AnotherCommandImplementation(_ => AddNewItem());
         }
-
-        public List<IngredientEntity> Ingredients {
+        
+        public ObservableCollection<IngredientEntity> Ingredients {
             get { return _ingredients; }
-            set { _ingredients = value; }
+            set {
+                _ingredients = value;
+                //OnPropertyChanged("Ingredients");
+            }
         }
 
+        public IngredientEntity SelectedItem {
+            get { return _selectedItem; }
+            set { _selectedItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void Save()
+        {
+            Ingredients.SaveData();
+        }
+
+        private void Refresh()
+        {
+            Ingredients.LoadData();
+        }
+
+        private void Delete()
+        {
+            Ingredients.Remove(SelectedItem);
+        }
+
+        public void AddNewItem()
+        {
+            IngredientEntity newItem = new IngredientEntity();
+            Ingredients.Add(newItem);
+
+            SelectedItem = newItem;
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using MyApp.DataProvider;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -9,55 +11,29 @@ using System.Threading.Tasks;
 
 namespace MyApp.Pages.Ingredients
 {
-    public class IngredientEntity
+    [DataLocation("base_ingredients.csv")]
+    public class IngredientEntity : BaseEntity
     {
-        private int _id;
         private string _name;
         private string _description;
-        private int _price;
-        private int _quantityLeft;
-        private List<IngredientEntity> myVar = new List<IngredientEntity>();
+        private string _category;
 
-        public int ID {
-            get { return _id; }
-            set { _id = value; }
-        }
-
-        [DisplayName("Pavadinimas")]
+        [Index(0)]
         public string Name {
-            get { return _description; }
-            set { _description = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
-        [DisplayName("Aprašas")]
+        [Index(1)]
         public string Description {
             get { return _description; }
             set { _description = value; }
         }
 
-        [DisplayName("Kaina")]
-        public int Price {
-            get { return _price; }
-            set { _price = value; }
-        }
-
-        [DisplayName("Likęs kiekis")]
-        public int QuantityLeft {
-            get { return _quantityLeft; }
-            set { _quantityLeft = value; }
-        }
-
-        [Editor(typeof(CollectionEditor), typeof(UITypeEditor))]
-        public List<IngredientEntity> MyProperty {
-            get {
-                if (myVar.Count == 0)
-                {
-                    myVar.Add(this);
-                    myVar.Add(new IngredientEntity());
-
-                }
-                return myVar; }
-            set { myVar = value; }
+        [Index(2)]
+        public string Category {
+            get { return _category; }
+            set { _category = value; }
         }
 
     }

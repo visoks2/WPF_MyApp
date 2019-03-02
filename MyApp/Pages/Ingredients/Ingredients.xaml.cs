@@ -30,65 +30,19 @@ namespace MyApp.Pages.Ingredients
 
         public override void OnActivated()
         {
+            IngredientsViewModel.RefreshComand.Execute(null);
             base.OnActivated();
         }
 
         public override void OnDeactivated()
         {
+            IngredientsViewModel.SaveComand.Execute(null);
             base.OnDeactivated();
         }
-        
-        private void dg_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-            //if (e.Column.Header.ToString() == "MyProperty")
-            //{
-            //    e.Column = new DataGridComboBoxColumn() { ItemsSource = new string[] { "as", "asdas" } };
-            //    e.Column.Header = "MyProperty";
-            //}
 
-            string displayName = GetPropertyDisplayName(e.PropertyDescriptor);
-            if (!string.IsNullOrEmpty(displayName))
-            {
-                e.Column.Header = displayName;
-            }
-        }
-        private string GetPropertyDisplayName(object descriptor)
+        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-
-            PropertyDescriptor pd = descriptor as PropertyDescriptor;
-            if (pd != null)
-            {
-                DisplayNameAttribute dn = pd.Attributes[typeof(DisplayNameAttribute)] as DisplayNameAttribute;
-                if (dn != null && dn != DisplayNameAttribute.Default)
-                {
-                    return dn.DisplayName;
-                }
-            }
-            else
-            {
-                PropertyInfo pi = descriptor as PropertyInfo;
-                if (pi != null)
-                {
-                    Object[] attributes = pi.GetCustomAttributes(typeof(DisplayNameAttribute), true);
-                    for (int i = 0; i < attributes.Length; ++i)
-                    {
-                        DisplayNameAttribute dn = attributes[i] as DisplayNameAttribute;
-                        if (dn != null && dn != DisplayNameAttribute.Default)
-                        {
-                            return dn.DisplayName;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            if (e.Column.Header.ToString() == "MyProperty")
-            {
-                e.Cancel = true;
-            }
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta / 3);
         }
     }
 }
