@@ -18,7 +18,7 @@
     </domain:UCBase.DataContext>
     <domain:UCBase.Resources>
 
-        <!--How to sort Ccombobox items-->
+        <!--How to sort Combobox items-->
         <!--<CollectionViewSource Source="{Binding Path=BaudRates}" x:Key="cvs">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription />

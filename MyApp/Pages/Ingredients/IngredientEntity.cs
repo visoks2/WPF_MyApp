@@ -35,6 +35,5 @@ namespace MyApp.Pages.Ingredients
             get { return _category; }
             set { _category = value; }
         }
-
     }
 }

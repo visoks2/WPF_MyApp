@@ -101,6 +101,7 @@
     <Compile Include="Pages\DeviceManager\DeviceManagerViewModel.cs" />
     <Compile Include="Pages\DeviceManager\Devices.cs" />
     <Compile Include="Pages\DeviceManager\TestCmdViewModel.cs" />
+    <Compile Include="Converters\DuplicateValueToColorConverter.cs" />
     <Compile Include="Pages\Ingredients\IngredientEntity.cs" />
     <Compile Include="Pages\Ingredients\Ingredients.xaml.cs">
       <DependentUpon>Ingredients.xaml</DependentUpon>

@@ -21,6 +21,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"></conv:InverseBooleanConverter>
+            <conv:DuplicateValueToColorConverter x:Key="DuplicateValueToColorConverter"></conv:DuplicateValueToColorConverter>
 
             <Style TargetType="showMeTheXaml:XamlDisplay" BasedOn="{StaticResource {x:Type showMeTheXaml:XamlDisplay}}">
                 <Style.Resources>
@@ -187,6 +188,16 @@
                     </Style>
                 </Style.BasedOn>
             </Style>
+
+            <Style x:Key="TextBlockStyle1" TargetType="{x:Type TextBlock}">
+                <Style.BasedOn>
+                    <Style TargetType="{x:Type TextBlock}">
+                        
+                    </Style>
+                </Style.BasedOn>
+            </Style>
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -21,6 +21,7 @@ namespace MyApp.Pages.Ingredients
 
         private ObservableCollection<IngredientEntity> _ingredients = new ObservableCollection<IngredientEntity>();
         private IngredientEntity _selectedItem;
+        private bool _isSelectedItemValid;
 
         public IngredientsViewModel()
         {
@@ -29,7 +30,7 @@ namespace MyApp.Pages.Ingredients
             DeleteComand = new AnotherCommandImplementation(_ => Delete());
             AddNewItemCommand = new AnotherCommandImplementation(_ => AddNewItem());
         }
-        
+
         public ObservableCollection<IngredientEntity> Ingredients {
             get { return _ingredients; }
             set {
@@ -37,10 +38,17 @@ namespace MyApp.Pages.Ingredients
                 //OnPropertyChanged("Ingredients");
             }
         }
-
         public IngredientEntity SelectedItem {
             get { return _selectedItem; }
-            set { _selectedItem = value;
+            set {
+                _selectedItem = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsSelectedItemValid {
+            get { return _isSelectedItemValid; }
+            set {
+                _isSelectedItemValid = value;
                 OnPropertyChanged();
             }
         }
@@ -49,22 +57,18 @@ namespace MyApp.Pages.Ingredients
         {
             Ingredients.SaveData();
         }
-
         private void Refresh()
         {
             Ingredients.LoadData();
         }
-
         private void Delete()
         {
             Ingredients.Remove(SelectedItem);
         }
-
         public void AddNewItem()
         {
             IngredientEntity newItem = new IngredientEntity();
             Ingredients.Add(newItem);
-
             SelectedItem = newItem;
         }
     }

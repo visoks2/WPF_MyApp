@@ -11,7 +11,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <domain:UCBase.DataContext>
-        <local:IngredientsViewModel x:Name="IngredientsViewModel"/>
+        <local:IngredientsViewModel x:Name="viewModel"/>
     </domain:UCBase.DataContext>
 
 
@@ -53,7 +53,8 @@
             </smtx:XamlDisplay>
 
             <ScrollViewer x:Name="scrollViewer">
-                <DataGrid ItemsSource="{Binding Ingredients}" 
+                <DataGrid  x:Name="dataGrid"
+                    ItemsSource="{Binding Ingredients}" 
                     SelectedItem="{Binding SelectedItem}"
                     VerticalAlignment="Stretch" 
                     HorizontalAlignment="Stretch"
@@ -63,7 +64,7 @@
                     AutoGenerateColumns="False"
                     materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                     materialDesign:DataGridAssist.ColumnHeaderPadding="8" 
-                    PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                    PreviewMouseWheel="DataGrid_PreviewMouseWheel" >
                     <DataGrid.Columns>
                         <!--<materialDesign:MaterialDataGridTextColumn Binding="{Binding ID}"
                             Visibility="Hidden"
@@ -71,7 +72,36 @@
                             EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />-->
                         <materialDesign:MaterialDataGridTextColumn Binding="{Binding Name}"
                             Header="Pavadinimas"
-                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle1}">
+                                    <Style.Triggers>
+                                        <!--<Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </Trigger>
+
+                                        <DataTrigger Binding="{Binding IsSelectedItemValid}" Value="False">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>-->
+
+
+                                        <DataTrigger Value="True" >
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource DuplicateValueToColorConverter}">
+                                                    <Binding ElementName="dataGrid" Path="ItemsSource"></Binding>
+                                                    <Binding ElementName="dataGrid" Path="SelectedItem"></Binding>
+                                                    <Binding />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <DataTrigger.Setters>
+                                                <Setter Property="Foreground" Value="Red"/>
+                                            </DataTrigger.Setters>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </materialDesign:MaterialDataGridTextColumn> 
+                        
                         <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
                             Header="Aprašas"
                             EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
