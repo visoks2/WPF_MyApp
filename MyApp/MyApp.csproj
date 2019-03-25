@@ -107,6 +107,11 @@
       <DependentUpon>Ingredients.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Ingredients\IngredientsViewModel.cs" />
+    <Compile Include="Pages\Products\ProductsEntity.cs" />
+    <Compile Include="Pages\Products\Products.xaml.cs">
+      <DependentUpon>Products.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Products\ProductsViewModel.cs" />
     <Compile Include="XamlDisplayEx.cs" />
     <Page Include="Domain\SampleMessageDialog.xaml">
       <SubType>Designer</SubType>
@@ -143,6 +148,10 @@
     <Page Include="Pages\Home\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Products\Products.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

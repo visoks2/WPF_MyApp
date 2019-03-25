@@ -32,6 +32,7 @@ namespace MyApp.Pages.DeviceManager.ConnectionManager
         {
             ConnectComand = new AnotherCommandImplementation(_ => OnConnectButtonPressed());
             RefreshAvailableDevicesCommand = new AnotherCommandImplementation(_ => RefreshAvailableDevices());
+            RefreshAvailableDevices();
         }
         #endregion
         #region Properties
