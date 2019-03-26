@@ -1,15 +1,7 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using CsvHelper.Configuration;
 using MyApp.DataProvider;
 using MyApp.Pages.Ingredients;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Drawing.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyApp.Pages.Products
 {
@@ -19,24 +11,23 @@ namespace MyApp.Pages.Products
         private string _ingredients = string.Empty;
         private ObservableCollection<IngredientEntity> _ingredientsList = new ObservableCollection<IngredientEntity>();
 
-
-        [Ignore]
         public string Ingredients {
             get {
                 OnIngredientsCountChanged();
-                return _ingredients; }
-            set { _ingredients = value;
+                return _ingredients;
+            }
+            set {
+                _ingredients = value;
             }
         }
 
-        [Index(3)]
         public ObservableCollection<IngredientEntity> IngredientsList {
             get { return _ingredientsList; }
-            set { _ingredientsList = value;
+            set {
+                _ingredientsList = value;
                 OnIngredientsCountChanged();
             }
         }
-
 
         private void OnIngredientsCountChanged()
         {
@@ -52,6 +43,18 @@ namespace MyApp.Pages.Products
                     Ingredients = _ingredientsList.Count.ToString() + (_ingredientsList.Count < 10 ? " ingredientai" : " ingredientu");
                     break;
             }
+        }
+    }
+
+    public class ProductsEntityMap : ClassMap<ProductsEntity>
+    {
+        public ProductsEntityMap()
+        {
+            Map(m => m.Name);
+            Map(m => m.Description);
+            Map(m => m.Category);
+            Map(m => m.IngredientsList).TypeConverter<JsonConverter<ObservableCollection<IngredientEntity>>>();
+            Map(m => m.Ingredients).Ignore();
         }
     }
 }

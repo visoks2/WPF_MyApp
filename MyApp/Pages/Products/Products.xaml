@@ -30,6 +30,9 @@
                         <Button ToolTip="Add row" Command="{Binding AddNewItemCommand}">
                             <materialDesign:PackIcon Kind="Add" />
                         </Button>
+                        <Button ToolTip="Add sub-row" Command="{Binding AddNewSubItemCommand}">
+                            <materialDesign:PackIcon Kind="AddBox" />
+                        </Button>
                         <Button ToolTip="Delete row" Command="{Binding DeleteComand}">
                             <materialDesign:PackIcon Kind="Delete" />
                         </Button>

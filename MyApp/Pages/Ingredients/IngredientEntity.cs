@@ -1,13 +1,6 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using CsvHelper.Configuration;
 using MyApp.DataProvider;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Drawing.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyApp.Pages.Products;
 
 namespace MyApp.Pages.Ingredients
 {
@@ -18,23 +11,30 @@ namespace MyApp.Pages.Ingredients
         private string _description;
         private string _category;
 
-        [Index(0)]
         public string Name {
             get { return _name; }
             set { _name = value; }
         }
 
-        [Index(1)]
         public string Description {
             get { return _description; }
             set { _description = value; }
         }
 
-        [Index(2)]
         public string Category {
             get { return _category; }
             set { _category = value; }
         }
 
+    }
+
+    public class IngredientEntityMap : ClassMap<ProductsEntity>
+    {
+        public IngredientEntityMap()
+        {
+            Map(m => m.Name);
+            Map(m => m.Description);
+            Map(m => m.Category);
+        }
     }
 }

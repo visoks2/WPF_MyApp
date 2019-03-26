@@ -13,7 +13,7 @@ using System.Windows.Input;
 namespace MyApp.Pages.Ingredients
 {
     public class IngredientsViewModel : BaseViewModel
-    {
+    {   
         public ICommand SaveComand { get; }
         public ICommand RefreshComand { get; }
         public ICommand DeleteComand { get; }
@@ -33,10 +33,7 @@ namespace MyApp.Pages.Ingredients
 
         public ObservableCollection<IngredientEntity> Ingredients {
             get { return _ingredients; }
-            set {
-                _ingredients = value;
-                //OnPropertyChanged("Ingredients");
-            }
+            set { _ingredients = value; }
         }
         public IngredientEntity SelectedItem {
             get { return _selectedItem; }

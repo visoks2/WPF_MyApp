@@ -18,7 +18,8 @@ namespace MyApp.Pages.Products
         public ICommand RefreshComand { get; }
         public ICommand DeleteComand { get; }
         public ICommand AddNewItemCommand { get; }
-
+        public ICommand AddNewSubItemCommand { get; }
+        
         private ObservableCollection<ProductsEntity> _products = new ObservableCollection<ProductsEntity>();
         private ProductsEntity _selectedItem;
         private bool _isSelectedItemValid;
@@ -29,6 +30,7 @@ namespace MyApp.Pages.Products
             RefreshComand = new AnotherCommandImplementation(_ => Refresh());
             DeleteComand = new AnotherCommandImplementation(_ => Delete());
             AddNewItemCommand = new AnotherCommandImplementation(_ => AddNewItem());
+            AddNewSubItemCommand = new AnotherCommandImplementation(_ => AddNewSubItem());
         }
 
         public ObservableCollection<ProductsEntity> Products {
@@ -52,9 +54,7 @@ namespace MyApp.Pages.Products
 
         private void Save()
         {
-            Products[0].Category = "dfsdfs";
-            Products[0].IngredientsList.Add(new Ingredients.IngredientEntity() { Name = "test", Description = "somecat", Category = "none" });
-            //Products.SaveData();
+            Products.SaveData();
         }
         private void Refresh()
         {
@@ -69,6 +69,13 @@ namespace MyApp.Pages.Products
             ProductsEntity newItem = new ProductsEntity();
             Products.Add(newItem);
             SelectedItem = newItem;
+        }
+        public void AddNewSubItem()
+        {
+            if (SelectedItem == null) return;
+
+            SelectedItem.Category = "dfsdfs";
+            SelectedItem.IngredientsList.Add(new Ingredients.IngredientEntity() { Name = "test", Description = "somecat", Category = "none" });
         }
     }
 }

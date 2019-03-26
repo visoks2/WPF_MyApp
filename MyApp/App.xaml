@@ -243,13 +243,12 @@
                             </materialDesign:MaterialDataGridTextColumn>
 
                             <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
-                            Header="Aprašas"
-                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Category}"
-                            Header="Kategorija?"
-                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-         
-
+                                                                       Header="Aprašas"
+                                                                       EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Category}" 
+                                                                       Header="Kategorija?" 
+                                                                       EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>
